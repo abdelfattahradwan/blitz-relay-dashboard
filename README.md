@@ -1,5 +1,7 @@
 # Blitz Relay Dashboard
 
+![Overview, rooms, room details, and connections pages in dark and light themes](.github/assets/banner.png)
+
 Blitz Relay Dashboard is a web app for monitoring and managing
 [Blitz Relay](https://github.com/abdelfattahradwan/blitz-relay) servers through their HTTP admin API. The dashboard runs
 entirely in the browser and has no server component. You build it once and serve the resulting static files from any
