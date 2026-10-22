@@ -1,0 +1,12 @@
+services:
+  dashboard:
+    build: .
+    image: blitz-relay-dashboard
+    ports:
+      - "8080:8080"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped

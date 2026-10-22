@@ -1,0 +1,421 @@
+@import "tailwindcss";
+
+@custom-variant light {
+  &:where([data-theme="light"]) {
+    @slot;
+  }
+
+  @media (prefers-color-scheme: light) {
+    &:where([data-theme="auto"]) {
+      @slot;
+    }
+  }
+}
+
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  --color-*: initial;
+
+  --color-storm-25: oklch(99.2% 0.003 268);
+  --color-storm-50: oklch(97.8% 0.005 268);
+  --color-storm-100: oklch(95.5% 0.007 268);
+  --color-storm-200: oklch(91% 0.01 268);
+  --color-storm-300: oklch(85.5% 0.013 268);
+  --color-storm-400: oklch(71% 0.018 268);
+  --color-storm-500: oklch(57.5% 0.022 268);
+  --color-storm-600: oklch(45% 0.022 268);
+  --color-storm-700: oklch(37% 0.02 268);
+  --color-storm-800: oklch(28.5% 0.018 268);
+  --color-storm-900: oklch(22.5% 0.016 268);
+  --color-storm-950: oklch(17.5% 0.014 268);
+  --color-storm-975: oklch(13.5% 0.012 268);
+
+  --color-volt-50: oklch(98.5% 0.02 92);
+  --color-volt-100: oklch(96.5% 0.048 92);
+  --color-volt-200: oklch(93.5% 0.089 92);
+  --color-volt-300: oklch(90% 0.138 92);
+  --color-volt-400: oklch(85.5% 0.165 92);
+  --color-volt-500: oklch(78% 0.159 92);
+  --color-volt-600: oklch(66% 0.135 92);
+  --color-volt-700: oklch(55% 0.112 92);
+  --color-volt-800: oklch(45% 0.092 92);
+  --color-volt-900: oklch(37% 0.075 92);
+  --color-volt-950: oklch(26% 0.053 92);
+
+  --color-ember-50: oklch(97.5% 0.012 24);
+  --color-ember-100: oklch(94.5% 0.027 24);
+  --color-ember-200: oklch(89% 0.057 24);
+  --color-ember-300: oklch(82% 0.1 24);
+  --color-ember-400: oklch(72% 0.174 24);
+  --color-ember-500: oklch(64% 0.21 24);
+  --color-ember-600: oklch(56% 0.199 24);
+  --color-ember-700: oklch(48% 0.178 24);
+  --color-ember-800: oklch(40% 0.147 24);
+  --color-ember-900: oklch(33% 0.115 24);
+  --color-ember-950: oklch(24% 0.094 24);
+
+  --color-verdant-50: oklch(97.5% 0.018 160);
+  --color-verdant-100: oklch(94.5% 0.037 160);
+  --color-verdant-200: oklch(89% 0.067 160);
+  --color-verdant-300: oklch(82% 0.105 160);
+  --color-verdant-400: oklch(72% 0.135 160);
+  --color-verdant-500: oklch(64% 0.144 160);
+  --color-verdant-600: oklch(56% 0.126 160);
+  --color-verdant-700: oklch(48% 0.108 160);
+  --color-verdant-800: oklch(40% 0.09 160);
+  --color-verdant-900: oklch(33% 0.074 160);
+  --color-verdant-950: oklch(24% 0.054 160);
+
+  --color-flare-50: oklch(97.5% 0.013 50);
+  --color-flare-100: oklch(94.5% 0.03 50);
+  --color-flare-200: oklch(89% 0.064 50);
+  --color-flare-300: oklch(82% 0.112 50);
+  --color-flare-400: oklch(72% 0.171 50);
+  --color-flare-500: oklch(64% 0.169 50);
+  --color-flare-600: oklch(56% 0.148 50);
+  --color-flare-700: oklch(48% 0.126 50);
+  --color-flare-800: oklch(40% 0.105 50);
+  --color-flare-900: oklch(33% 0.087 50);
+  --color-flare-950: oklch(24% 0.063 50);
+
+  --color-arc-50: oklch(97.5% 0.013 236);
+  --color-arc-100: oklch(94.5% 0.03 236);
+  --color-arc-200: oklch(89% 0.062 236);
+  --color-arc-300: oklch(82% 0.104 236);
+  --color-arc-400: oklch(72% 0.135 236);
+  --color-arc-500: oklch(64% 0.137 236);
+  --color-arc-600: oklch(56% 0.12 236);
+  --color-arc-700: oklch(48% 0.103 236);
+  --color-arc-800: oklch(40% 0.086 236);
+  --color-arc-900: oklch(33% 0.071 236);
+  --color-arc-950: oklch(24% 0.051 236);
+
+  --color-surface: var(--color-storm-950);
+  --color-surface-raised: var(--color-storm-900);
+  --color-surface-strong: var(--color-storm-800);
+  --color-surface-stronger: var(--color-storm-700);
+  --color-surface-sunken: var(--color-storm-975);
+  --color-control: var(--color-storm-800);
+  --color-line-subtle: var(--color-storm-900);
+  --color-line: var(--color-storm-800);
+  --color-line-strong: var(--color-storm-700);
+  --color-line-stronger: var(--color-storm-600);
+  --color-fg: var(--color-storm-50);
+  --color-fg-secondary: var(--color-storm-300);
+  --color-fg-tertiary: var(--color-storm-400);
+  --color-fg-muted: var(--color-storm-500);
+  --color-backdrop: var(--color-storm-975);
+  --color-primary-surface: var(--color-volt-950);
+  --color-primary-surface-raised: var(--color-volt-900);
+  --color-primary-line: var(--color-volt-800);
+  --color-primary-line-strong: var(--color-volt-700);
+  --color-primary-emphasis: var(--color-volt-400);
+  --color-primary-emphasis-fg: var(--color-storm-975);
+  --color-primary-fg: var(--color-volt-400);
+  --color-danger-surface: var(--color-ember-950);
+  --color-danger-surface-raised: var(--color-ember-900);
+  --color-danger-line: var(--color-ember-800);
+  --color-danger-line-strong: var(--color-ember-700);
+  --color-danger-emphasis: var(--color-ember-500);
+  --color-danger-fg: var(--color-ember-400);
+  --color-success-surface: var(--color-verdant-950);
+  --color-success-surface-raised: var(--color-verdant-900);
+  --color-success-line: var(--color-verdant-800);
+  --color-success-line-strong: var(--color-verdant-700);
+  --color-success-emphasis: var(--color-verdant-500);
+  --color-success-fg: var(--color-verdant-400);
+  --color-warning-surface: var(--color-flare-950);
+  --color-warning-surface-raised: var(--color-flare-900);
+  --color-warning-line: var(--color-flare-800);
+  --color-warning-line-strong: var(--color-flare-700);
+  --color-warning-emphasis: var(--color-flare-500);
+  --color-warning-fg: var(--color-flare-400);
+  --color-info-surface: var(--color-arc-950);
+  --color-info-surface-raised: var(--color-arc-900);
+  --color-info-line: var(--color-arc-800);
+  --color-info-line-strong: var(--color-arc-700);
+  --color-info-emphasis: var(--color-arc-500);
+  --color-info-fg: var(--color-arc-400);
+}
+
+:root {
+  --shadow-panel:
+    inset 0 1px 0 oklch(100% 0 0 / 0.05), 0 1px 2px oklch(0% 0 0 / 0.4),
+    0 6px 16px -4px oklch(0% 0 0 / 0.35);
+  --shadow-bar: 0 1px 2px oklch(0% 0 0 / 0.4), 0 4px 12px -2px oklch(0% 0 0 / 0.3);
+  --shadow-control:
+    inset 0 1px 0 oklch(100% 0 0 / 0.14), inset 0 -1px 0 oklch(0% 0 0 / 0.2),
+    0 1px 2px oklch(0% 0 0 / 0.35);
+  --shadow-control-pressed: inset 0 1px 2px oklch(0% 0 0 / 0.4);
+  --shadow-field: inset 0 1px 2px oklch(0% 0 0 / 0.5);
+  --shadow-chip: inset 0 1px 0 oklch(100% 0 0 / 0.08);
+  --shadow-drawer: -8px 0 24px oklch(0% 0 0 / 0.4);
+
+  @variant light {
+    color-scheme: light;
+
+    --shadow-panel:
+      inset 0 1px 0 oklch(100% 0 0), 0 1px 2px oklch(25% 0.03 268 / 0.08),
+      0 6px 16px -4px oklch(25% 0.03 268 / 0.1);
+    --shadow-bar: 0 1px 2px oklch(25% 0.03 268 / 0.06), 0 4px 12px -2px oklch(25% 0.03 268 / 0.08);
+    --shadow-control:
+      inset 0 1px 0 oklch(100% 0 0 / 0.5), inset 0 -1px 0 oklch(25% 0.03 268 / 0.1),
+      0 1px 2px oklch(25% 0.03 268 / 0.12);
+    --shadow-control-pressed: inset 0 1px 2px oklch(25% 0.03 268 / 0.2);
+    --shadow-field: inset 0 1px 2px oklch(25% 0.03 268 / 0.1);
+    --shadow-chip: inset 0 1px 0 oklch(100% 0 0 / 0.6);
+    --shadow-drawer: -8px 0 24px oklch(25% 0.03 268 / 0.15);
+
+    --color-surface: var(--color-storm-100);
+    --color-surface-raised: var(--color-storm-25);
+    --color-surface-strong: var(--color-storm-200);
+    --color-surface-stronger: var(--color-storm-300);
+    --color-surface-sunken: var(--color-storm-50);
+    --color-control: var(--color-storm-25);
+    --color-line-subtle: var(--color-storm-300);
+    --color-line: var(--color-storm-400);
+    --color-line-strong: var(--color-storm-500);
+    --color-line-stronger: var(--color-storm-600);
+    --color-fg: var(--color-storm-950);
+    --color-fg-secondary: var(--color-storm-700);
+    --color-fg-tertiary: var(--color-storm-600);
+    --color-fg-muted: var(--color-storm-500);
+    --color-primary-surface: var(--color-volt-200);
+    --color-primary-surface-raised: var(--color-volt-300);
+    --color-primary-line: var(--color-volt-500);
+    --color-primary-line-strong: var(--color-volt-600);
+    --color-primary-emphasis: var(--color-volt-500);
+    --color-primary-fg: var(--color-volt-800);
+    --color-danger-surface: var(--color-ember-100);
+    --color-danger-surface-raised: var(--color-ember-200);
+    --color-danger-line: var(--color-ember-400);
+    --color-danger-line-strong: var(--color-ember-500);
+    --color-danger-emphasis: var(--color-ember-600);
+    --color-danger-fg: var(--color-ember-700);
+    --color-success-surface: var(--color-verdant-100);
+    --color-success-surface-raised: var(--color-verdant-200);
+    --color-success-line: var(--color-verdant-400);
+    --color-success-line-strong: var(--color-verdant-500);
+    --color-success-emphasis: var(--color-verdant-600);
+    --color-success-fg: var(--color-verdant-700);
+    --color-warning-surface: var(--color-flare-100);
+    --color-warning-surface-raised: var(--color-flare-200);
+    --color-warning-line: var(--color-flare-400);
+    --color-warning-line-strong: var(--color-flare-500);
+    --color-warning-emphasis: var(--color-flare-500);
+    --color-warning-fg: var(--color-flare-700);
+    --color-info-surface: var(--color-arc-100);
+    --color-info-surface-raised: var(--color-arc-200);
+    --color-info-line: var(--color-arc-400);
+    --color-info-line-strong: var(--color-arc-500);
+    --color-info-emphasis: var(--color-arc-600);
+    --color-info-fg: var(--color-arc-700);
+  }
+}
+
+@custom-variant fine-hover {
+  @media (pointer: fine) and (hover: hover) {
+    @slot;
+  }
+}
+
+@utility panel {
+  @apply rounded-md border border-line bg-surface-raised p-4;
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--color-surface-raised), white 3%),
+    var(--color-surface-raised)
+  );
+  box-shadow: var(--shadow-panel);
+}
+
+@utility field {
+  @apply h-10 min-w-0 rounded-md border border-line bg-surface-sunken px-3 text-sm placeholder:text-fg-muted focus-visible:border-primary-line-strong focus-visible:outline-none;
+  box-shadow: var(--shadow-field);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+
+  &:focus-visible {
+    box-shadow:
+      var(--shadow-field),
+      0 0 0 3px color-mix(in oklab, var(--color-primary-emphasis) 25%, transparent);
+  }
+
+  @variant fine-hover {
+    &:hover:not(:focus-visible) {
+      @apply border-line-strong;
+    }
+  }
+}
+
+@utility pressable {
+  @apply cursor-pointer border disabled:cursor-not-allowed disabled:opacity-50;
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--button-background), white 12%),
+    var(--button-background) 60%,
+    color-mix(in oklab, var(--button-background), black 6%)
+  );
+  box-shadow: var(--shadow-control);
+  transition:
+    filter 150ms ease,
+    translate 100ms ease,
+    box-shadow 100ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+
+  @variant fine-hover {
+    &:hover:not(:disabled) {
+      filter: brightness(1.06);
+    }
+  }
+
+  &:active:not(:disabled) {
+    translate: 0 1px;
+    background-image: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--button-background), black 6%),
+      var(--button-background)
+    );
+    box-shadow: var(--shadow-control-pressed);
+  }
+}
+
+@utility button {
+  @apply pressable flex h-10 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold;
+}
+
+@utility icon-button {
+  @apply pressable flex size-10 shrink-0 items-center justify-center rounded-md;
+}
+
+@utility button-primary {
+  --button-background: var(--color-primary-emphasis);
+  @apply text-primary-emphasis-fg;
+  border-color: color-mix(in oklab, var(--color-primary-emphasis), black 18%);
+}
+
+@utility button-secondary {
+  --button-background: var(--color-control);
+  @apply border-line text-fg-secondary;
+
+  @variant fine-hover {
+    &:hover:not(:disabled) {
+      @apply border-line-strong text-fg;
+    }
+  }
+}
+
+@utility button-danger {
+  --button-background: var(--color-danger-emphasis);
+  @apply text-surface;
+  border-color: color-mix(in oklab, var(--color-danger-emphasis), black 18%);
+}
+
+@utility button-danger-soft {
+  --button-background: var(--color-danger-surface);
+  @apply border-danger-line-strong text-danger-fg;
+}
+
+@utility chip {
+  @apply border bg-linear-to-b;
+  box-shadow: var(--shadow-chip);
+}
+
+@utility metric {
+  @apply bg-linear-to-b from-fg to-fg-tertiary bg-clip-text font-mono font-bold text-transparent tabular-nums;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    color-mix(in oklab, var(--color-primary-emphasis) 6%, transparent),
+    transparent
+  );
+  color: var(--color-fg);
+}
+
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+select {
+  @apply flex items-center gap-2;
+
+  &::picker-icon {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--color-fg-tertiary);
+    mask: url("../lib/assets/chevron-down.svg") center / contain no-repeat;
+    transition: rotate 150ms ease;
+  }
+
+  &:open::picker-icon {
+    rotate: 180deg;
+  }
+
+  &::picker(select) {
+    margin-block: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-raised);
+    color: var(--color-fg);
+    box-shadow: var(--shadow-panel);
+    opacity: 0;
+    translate: 0 -0.25rem;
+    transition:
+      opacity 150ms ease,
+      translate 150ms ease,
+      overlay 150ms allow-discrete,
+      display 150ms allow-discrete;
+  }
+
+  &:open::picker(select) {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    &:open::picker(select) {
+      opacity: 0;
+      translate: 0 -0.25rem;
+    }
+  }
+
+  option {
+    @apply flex items-center gap-2 rounded-sm px-3 py-2 text-sm;
+    cursor: pointer;
+
+    &::checkmark {
+      color: var(--color-primary-fg);
+    }
+
+    &:checked {
+      @apply font-medium text-primary-fg;
+    }
+
+    &:is(:hover, :focus-visible) {
+      @apply bg-surface-strong outline-none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::picker-icon,
+    &::picker(select) {
+      transition: none;
+    }
+  }
+}

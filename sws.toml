@@ -1,0 +1,16 @@
+[general]
+port = 8080
+root = "/dashboard"
+page-fallback = "/dashboard/index.html"
+cache-control-headers = false
+health = true
+
+[advanced]
+
+[[advanced.headers]]
+source = "**"
+headers = { Cache-Control = "no-cache", X-Robots-Tag = "noindex, nofollow" }
+
+[[advanced.headers]]
+source = "/_app/immutable/**"
+headers = { Cache-Control = "public, max-age=31536000, immutable" }

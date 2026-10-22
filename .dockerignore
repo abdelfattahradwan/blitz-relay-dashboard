@@ -1,0 +1,9 @@
+*
+!LICENSE
+!bun.lock
+!package.json
+!src
+!static
+!sws.toml
+!tsconfig.json
+!vite.config.ts
