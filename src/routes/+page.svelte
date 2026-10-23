@@ -144,7 +144,7 @@
         {@render stat(
           "Rooms without a host",
           stats.hostlessRooms,
-          `${stats.pendingHostClaims} pending host claims`,
+          `${stats.pendingHostClaims} pending host ${stats.pendingHostClaims === 1 ? "claim" : "claims"}`,
         )}
       </div>
     {:else}
