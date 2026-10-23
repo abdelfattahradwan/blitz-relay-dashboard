@@ -26,12 +26,11 @@ The dashboard provides the following features:
 
 To use the dashboard, you need the following:
 
-- A Blitz Relay server with its HTTP API enabled. Use Blitz Relay 1.4.0 or later to list a room's clients and remove
-  hosts. With earlier versions, you kick a client by entering its virtual client ID instead.
+- A Blitz Relay server with its HTTP API enabled. Any version works, but versions 1.4.0 and later offer API improvements
+  that the dashboard takes full advantage of.
 - Docker, or a web server that can serve static files and fall back to `index.html` for unknown paths, such as nginx,
   Apache HTTP Server, or Caddy.
-- A current version of a major browser. In browsers that don't support customisable select elements, the dashboard
-  displays the browser's native select controls.
+- A current version of a major browser.
 
 ## Run the dashboard with Docker
 
