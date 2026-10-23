@@ -2,43 +2,30 @@
 
 ![Overview, rooms, room details, and connections pages in dark and light themes](.github/assets/banner.png)
 
-Blitz Relay Dashboard is a web app for monitoring and managing
-[Blitz Relay](https://github.com/abdelfattahradwan/blitz-relay) servers through their HTTP admin API. The dashboard runs
-entirely in the browser and has no server component. You build it once and serve the resulting static files from any
-web server.
+A web dashboard for monitoring and managing [Blitz Relay](https://github.com/abdelfattahradwan/blitz-relay) servers
+through their HTTP admin API. It runs entirely in the browser, so any static web server can host it.
 
 ## Features
 
-The dashboard provides the following features:
-
-- **Overview**: shows the relay's health, version, request latency, and room statistics, and updates them live.
-- **Rooms**: lists every room on the relay, with search and filters for room type, visibility, host, and clients.
-- **Room management**: lets you create persistent rooms, rename rooms, edit room metadata, remove the host of a
-  persistent room, and delete rooms.
-- **Clients**: lists the clients in a room, with their IP addresses when the relay reveals them, and lets you kick
-  them.
-- **Connections**: saves several relays under names of your choice, shows each relay's version, and lets you switch
-  between them from the navigation bar.
-- **Themes**: provides dark and light themes, and can follow the system preference.
-- **Connection storage**: encrypts each connection's relay URL and admin token, and stores them only in the browser.
+- **Overview**: the relay's health, version, latency, and room statistics, updated live.
+- **Rooms**: every room on the relay, with search and filters for type, visibility, host, and clients.
+- **Room management**: create persistent rooms, rename and delete rooms, edit their metadata, and remove their hosts.
+- **Clients**: each room's clients, with their IP addresses when the relay reveals them, and a kick button for each.
+- **Connections**: save several relays and switch between them from the navigation bar.
+- **Themes**: dark, light, or the system preference.
+- **Encrypted storage**: connections, including their admin tokens, are encrypted and stored only in the browser.
 
 ## Requirements
 
-To use the dashboard, you need the following:
-
 - A Blitz Relay server with its HTTP API enabled. Any version works, but versions 1.4.0 and later offer API improvements
   that the dashboard takes full advantage of.
-- Docker, or a web server that can serve static files and fall back to `index.html` for unknown paths, such as nginx,
-  Apache HTTP Server, or Caddy.
+- Docker, or a web server such as nginx, Apache HTTP Server, or Caddy.
 - A current version of a major browser.
 
 ## Run the dashboard with Docker
 
-The repository includes a `Dockerfile` that builds the dashboard and serves it with
-[static-web-server](https://static-web-server.net/). The image contains only the web server and the dashboard's static
-files, so you don't need Bun or a separate web server.
-
-To run the dashboard with Docker, follow these steps:
+The `Dockerfile` builds the dashboard and serves it with [static-web-server](https://static-web-server.net/). The image
+contains only the web server and the dashboard's files.
 
 1. Build the image:
 
@@ -52,40 +39,36 @@ To run the dashboard with Docker, follow these steps:
    docker run -d -p 8080:8080 --read-only --cap-drop ALL --name blitz-relay-dashboard blitz-relay-dashboard
    ```
 
-   Alternatively, start it with Docker Compose, which applies the same restrictions:
+   Or start it with Docker Compose, which applies the same restrictions:
 
    ```sh
    docker compose up -d
    ```
 
-3. Open http://localhost:8080 in your browser.
+3. Open http://localhost:8080.
 
-The container behaves as follows:
+The container:
 
-- It listens on port `8080` and runs as an unprivileged user, so it works with a read-only file system.
-- It serves `index.html` for any path that doesn't match a file.
-- It sends an `X-Robots-Tag: noindex, nofollow` header with every response.
-- It tells browsers to revalidate `index.html` on every visit and to cache the hashed files in `/_app/immutable/` for a
-  year, so browsers load a new version of the dashboard as soon as you update the image.
-- It answers health checks at `/health`. The image has no shell or `curl`, so probe the endpoint from your orchestrator
-  or reverse proxy instead of with a Docker `HEALTHCHECK`.
+- Listens on port `8080` and runs as an unprivileged user.
+- Serves `index.html` for any path that doesn't match a file.
+- Sends an `X-Robots-Tag: noindex, nofollow` header with every response.
+- Revalidates `index.html` on every visit and caches the hashed files in `/_app/immutable/` for a year.
+- Answers health checks at `/health`. The image has no shell or `curl`, so probe it from your orchestrator or reverse
+  proxy rather than with a Docker `HEALTHCHECK`.
+- Serves HTTP only. For HTTPS, run it behind a reverse proxy.
 
-The container serves the dashboard over HTTP. To serve it over HTTPS, run it behind a reverse proxy.
-
-To build the image for both `linux/amd64` and `linux/arm64`, use Docker Buildx and push the result to your registry:
+To build the image for `linux/amd64` and `linux/arm64` and push it to your registry, use Docker Buildx:
 
 ```sh
 docker buildx build --platform linux/amd64,linux/arm64 -t REGISTRY/blitz-relay-dashboard --push .
 ```
 
-Replace `REGISTRY` with the address of your container registry, for example `ghcr.io/your-name`.
+Replace `REGISTRY` with your registry's address, for example `ghcr.io/your-name`.
 
 ## Deploy the dashboard
 
-Before you begin, install [Bun](https://bun.sh) or another package manager. The commands in this document use Bun, but
-Bun isn't required. For more information, see [Use another package manager](#use-another-package-manager).
-
-To deploy the dashboard, follow these steps:
+The commands in this document use [Bun](https://bun.sh), but any package manager works. For more information, see
+[Use another package manager](#use-another-package-manager).
 
 1. Install the dependencies:
 
@@ -93,28 +76,19 @@ To deploy the dashboard, follow these steps:
    bun install
    ```
 
-2. Build the static site:
+2. Build the static site into the `build` directory:
 
    ```sh
    bun run build
    ```
 
-   The build output is written to the `build` directory.
-
 3. Copy the contents of the `build` directory to your web server.
-4. Configure your web server to serve `index.html` for any path that doesn't match a file. For example configurations,
-   see the following sections.
+4. Configure the web server to serve `index.html` for any path that doesn't match a file, so that links such as
+   `/rooms/ABCD1234` work when they're opened directly or reloaded.
 
-The dashboard is a single-page app: the browser renders every page from `index.html`. Without the fallback, links such
-as `/rooms/ABCD1234` return a `404` error when they're opened directly or reloaded.
-
-The following sections show configurations for nginx, Apache HTTP Server, and Caddy. Each configuration serves the
-dashboard at dashboard.example.com from the `/srv/blitz-relay-dashboard` directory. Each configuration also sends an
-`X-Robots-Tag` header that tells search engines not to index the dashboard. The dashboard itself includes a `robots.txt`
-file that disallows all crawlers, and `noindex` meta tags.
-
-The nginx and Apache HTTP Server configurations serve the dashboard over HTTP. To serve it over HTTPS, add your
-certificate configuration. Caddy serves the site over HTTPS automatically.
+The following configurations serve the dashboard at `dashboard.example.com` from `/srv/blitz-relay-dashboard`, and send
+an `X-Robots-Tag` header that stops search engines from indexing it. The nginx and Apache HTTP Server configurations
+serve HTTP; add your certificate configuration for HTTPS. Caddy serves HTTPS automatically.
 
 ### nginx
 
@@ -134,13 +108,12 @@ server {
 }
 ```
 
-**Note**: A `location` block inherits `add_header` directives from the `server` block only if it doesn't define any
-`add_header` directives of its own. If you add a header in `location /`, repeat the `X-Robots-Tag` header there.
+**Note**: If you add an `add_header` directive to `location /`, repeat the `X-Robots-Tag` header there. A `location`
+block with its own `add_header` directives doesn't inherit those of the `server` block.
 
 ### Apache HTTP Server
 
-Enable the `mod_dir` and `mod_headers` modules, and then add the following virtual host to your Apache HTTP Server
-configuration:
+Enable the `mod_dir` and `mod_headers` modules, and then add the following virtual host to your configuration:
 
 ```apache
 <VirtualHost *:80>
@@ -172,46 +145,39 @@ dashboard.example.com {
 
 ## Connect to a relay
 
-The dashboard sends requests to the relay directly from the browser, so the relay's HTTP API must be reachable from
-every device that opens the dashboard.
+The dashboard calls the relay's HTTP API directly from the browser, so the API must be reachable from every device that
+opens the dashboard. Configure the relay first:
 
-Before you connect, configure the relay as follows:
+- Don't start it with the `--disable-http` flag. The HTTP API listens on port `7771` by default.
+- Set the admin token in the `BLITZ_RELAY_HTTP_ADMIN_TOKEN` environment variable.
+- If you restrict cross-origin resource sharing (CORS) with the `--cors` flag, add the dashboard's origin to
+  `allowedOrigins`, and allow the `Authorization` and `Content-Type` headers and the `GET`, `POST`, `PATCH`, and
+  `DELETE` methods. By default, the relay accepts requests from any origin.
+- If you serve the dashboard over HTTPS, serve the relay's HTTP API over HTTPS too. Browsers block requests from HTTPS
+  pages to HTTP addresses.
+- To show clients' IP addresses, set the `--client-details` option to `IpAddresses`, or to `IpEndpoints` to include
+  ports. By default, the relay reveals only client IDs.
 
-- Start the relay without the `--disable-http` flag. By default, the HTTP API listens on port `7771`.
-- Set the admin token in the relay's `BLITZ_RELAY_HTTP_ADMIN_TOKEN` environment variable.
-- If you restrict the relay's cross-origin resource sharing (CORS) policy with the `--cors` flag, add the dashboard's
-  origin to `allowedOrigins`. Also allow the `Authorization` and `Content-Type` headers, and the `GET`, `POST`, `PATCH`,
-  and `DELETE` methods. By default, the relay accepts requests from any origin.
-- If you serve the dashboard over HTTPS, serve the relay's HTTP API over HTTPS too, for example behind a reverse proxy.
-  Browsers block requests from HTTPS pages to HTTP addresses.
-- If you want the dashboard to show clients' IP addresses, set the relay's `--client-details` option to `IpAddresses`,
-  or to `IpEndpoints` to include ports. By default, the relay only reveals client IDs.
+To add a connection:
 
-To connect the dashboard to a relay, follow these steps:
-
-1. Open the dashboard. The first time you open it, the **Add a connection** page appears. To add another connection
-   later, click **Connections** in the navigation bar, and then click **Add connection**.
-2. In the **Name** field, enter a name that identifies the relay, for example `Production`.
-3. In the **Relay URL** field, enter the address of the relay's HTTP API, for example `http://localhost:7771`.
-4. In the **Admin token** field, enter the value of the relay's `BLITZ_RELAY_HTTP_ADMIN_TOKEN` environment variable.
+1. Open the dashboard. The first time, the **Add a connection** page opens. Later, click **Connections** in the
+   navigation bar, and then click **Add connection**.
+2. In **Name**, enter a name for the relay, for example `Production`.
+3. In **Relay URL**, enter the address of the relay's HTTP API, for example `http://localhost:7771`.
+4. In **Admin token**, enter the value of `BLITZ_RELAY_HTTP_ADMIN_TOKEN`.
 5. Click **Add connection**.
 
-The dashboard checks that the relay responds, saves the connection, and makes it the active connection.
-
-To switch to another saved connection, click the active connection's name in the navigation bar, and then click the
-connection that you want to use. The dashboard opens the overview of the selected relay. On the **Connections** page,
-you can also edit and delete saved connections.
+The dashboard checks that the relay responds, saves the connection, and makes it active. To switch relays, click the
+active connection's name in the navigation bar and choose another connection. To edit or delete connections, use the
+**Connections** page.
 
 ## Security
 
-The dashboard encrypts the saved connections with AES-GCM under a non-extractable key, and stores them in the browser's
-IndexedDB. Encryption keeps the admin tokens out of plain-text storage, but anyone with access to the browser profile
-can still use the dashboard and its tokens. Restrict access to the browser profile and to the web server that hosts the
-dashboard.
+The dashboard encrypts saved connections with AES-GCM under a non-extractable key and stores them in the browser's
+IndexedDB. This keeps admin tokens out of plain-text storage, but anyone with access to the browser profile can still
+use them. Restrict access to the browser profile and to the web server that hosts the dashboard.
 
 ## Develop the dashboard
-
-Before you begin, install Bun or another package manager.
 
 Install the dependencies and start the development server:
 
@@ -220,7 +186,7 @@ bun install
 bun run dev
 ```
 
-The following table lists the project's scripts:
+The project has the following scripts:
 
 | Command           | Description                                        |
 | ----------------- | -------------------------------------------------- |
@@ -233,13 +199,10 @@ The following table lists the project's scripts:
 
 ## Use another package manager
 
-The project doesn't depend on Bun. You can install the dependencies and run the scripts with another package manager,
-such as npm, pnpm, aube, or Nub:
+The project doesn't depend on Bun. You can use npm, pnpm, aube, or Nub instead:
 
-- [aube](https://aube.sh) and [Nub](https://nubjs.com) read and write the existing `bun.lock` file, so you can use them
-  without any changes.
-- To use npm or pnpm, delete the `bun.lock` file before you install the dependencies. The package manager creates its
-  own lockfile.
+- [aube](https://aube.sh) and [Nub](https://nubjs.com) use the existing `bun.lock` file as it is.
+- npm and pnpm create their own lockfiles, so delete `bun.lock` before you install the dependencies with them.
 
 To run a script, replace `bun run` with your package manager's equivalent, for example `npm run build`.
 
